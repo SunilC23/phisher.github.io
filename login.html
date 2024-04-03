@@ -1,39 +1,4 @@
-<?php
-session_start();
 
-include("connection.php"); // Include connection.php to establish database connection
-include("functions.php");
-
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    // Something was posted
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // Check if the provided email exists in the database
-    $query = "SELECT * FROM users WHERE email = '$email' LIMIT 1";
-    $result = mysqli_query($connection, $query); // Use $connection variable for database connection
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        // Email exists, fetch the associated user data
-        $user_data = mysqli_fetch_assoc($result);
-        $stored_password_hash = $user_data['password'];
-
-        // Verify the password
-        if (password_verify($password, $stored_password_hash)) {
-            // Passwords match, set session variables and redirect to loggedin.php
-            $_SESSION['user_id'] = $user_data['id'];
-            header("Location: loggedin.php");
-            exit;
-        } else {
-            // Passwords do not match
-            echo "Incorrect password!";
-        }
-    } else {
-        // Email does not exist in the database
-        echo "Email not found!";
-    }
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
